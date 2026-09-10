@@ -1,0 +1,98 @@
+alessandroaronica@192 todo-backend % docker compose -f docker-compose.dev.yml down --volumes
+[+] down 2/2
+ ✔ Container todo-backend-mongo-1 Removed                                                                                         0.1s
+ ✔ Network todo-backend_default   Removed                                                                                         0.1s
+alessandroaronica@192 todo-backend % docker compose -f docker-compose.dev.yml up -d                                       
+WARN[0001] Found orphan containers (todo-backend-app-1) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up. 
+[+] up 2/2
+ ✔ Network todo-backend_default   Created                                                                                         0.0s
+ ✔ Container todo-backend-mongo-1 Started                                                                                         0.1s
+alessandroaronica@192 todo-backend % docker ps
+CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS         PORTS                                           NAMES
+0d6afebc420b   mongo:7   "docker-entrypoint.s…"   4 seconds ago   Up 3 seconds   0.0.0.0:3456->27017/tcp, [::]:3456->27017/tcp   todo-backend-mongo-1
+alessandroaronica@192 todo-backend % docker exec -it todo-backend-mongo-1 bash
+root@0d6afebc420b:/# mongosh -u root -p example --authenticationDatabase admin
+Current Mongosh Log ID:	6aa2e5e033a249c5aab691ec
+Connecting to:		mongodb://<credentials>@127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&authSource=admin&appName=mongosh+2.10.0
+Using MongoDB:		7.0.41
+Using Mongosh:		2.10.0
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+
+To help improve our products, anonymous usage data is collected and sent to MongoDB periodically (https://www.mongodb.com/legal/privacy-policy).
+You can opt-out by running the disableTelemetry() command.
+
+------
+   The server generated these startup warnings when booting
+   2026-09-10T17:15:37.658+00:00: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine. See http://dochub.mongodb.org/core/prodnotes-filesystem
+   2026-09-10T17:15:38.375+00:00: For customers running MongoDB 7.0, we suggest changing the contents of the following sysfsFile
+------
+
+test> show dbs
+admin         100.00 KiB
+config         12.00 KiB
+local          72.00 KiB
+the_database   40.00 KiB
+test> use the_database
+switched to db the_database
+the_database> show collections
+todos
+the_database> db.todos.find({})
+[
+  {
+    _id: ObjectId('6aa2e5b8b420810cc499e9ad'),
+    text: 'Write code',
+    done: true
+  },
+  {
+    _id: ObjectId('6aa2e5b8b420810cc499e9ae'),
+    text: 'Learn about containers',
+    done: false
+  }
+]
+the_database> db.todos.insertOne({ text: "Increase the number of tools in my tool belt", done: false })
+{
+  acknowledged: true,
+  insertedId: ObjectId('6aa2e65433a249c5aab691ed')
+}
+the_database> db.todos.find({})
+[
+  {
+    _id: ObjectId('6aa2e5b8b420810cc499e9ad'),
+    text: 'Write code',
+    done: true
+  },
+  {
+    _id: ObjectId('6aa2e5b8b420810cc499e9ae'),
+    text: 'Learn about containers',
+    done: false
+  },
+  {
+    _id: ObjectId('6aa2e65433a249c5aab691ed'),
+    text: 'Increase the number of tools in my tool belt',
+    done: false
+  }
+]
+the_database> exit
+root@0d6afebc420b:/# exit
+exit
+
+What's next:
+    Try Docker Debug for seamless, persistent debugging tools in any container or image → docker debug todo-backend-mongo-1
+    Learn more at https://docs.docker.com/go/debug-cli/
+alessandroaronica@192 todo-backend % MONGO_URL=mongodb://the_username:the_password@localhost:3456/the_database npm run dev
+
+> todo-express-backend@0.0.0 dev
+> nodemon ./bin/www
+
+[nodemon] 3.1.14
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): *.*
+[nodemon] watching extensions: js,mjs,cjs,json
+[nodemon] starting `node ./bin/www`
+GET /todos 200 13.120 ms - 250
+
+
+alessandroaronica@192 ~ % curl http://localhost:3000/todos
+[{"_id":"6aa2e5b8b420810cc499e9ad","text":"Write code","done":true},{"_id":"6aa2e5b8b420810cc499e9ae","text":"Learn about containers","done":false},{"_id":"6aa2e65433a249c5aab691ed","text":"Increase the number of tools in my tool belt","done":false}]%                 alessandroaronica@192 ~ % 
