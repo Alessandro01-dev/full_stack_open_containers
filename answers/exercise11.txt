@@ -1,0 +1,19 @@
+alessandroaronica@192 ~ % docker exec -it todo-backend-redis-1 redis-cli
+127.0.0.1:6379> KEYS *
+(empty array)
+127.0.0.1:6379> GET added_todos
+(nil)
+127.0.0.1:6379> SET added_todos 9001
+OK
+127.0.0.1:6379> GET added_todos
+"9002"
+127.0.0.1:6379> DEL added_todos
+(integer) 1
+127.0.0.1:6379> GET added_todos
+"1"
+127.0.0.1:6379> exit
+
+alessandroaronica@192 ~ % curl -X POST http://localhost:3000/todos -H "Content-Type: application/json" -d '{"text": "Testing after redis-cli set"}'
+{"text":"Testing after redis-cli set","done":false,"_id":"6aa429f009bd43882218c041","__v":0}
+alessandroaronica@192 ~ % curl -X POST http://localhost:3000/todos -H "Content-Type: application/json" -d '{"text": "Testing after deleting key"}'
+{"text":"Testing after deleting key","done":false,"_id":"6aa42a7909bd43882218c043","__v":0}
