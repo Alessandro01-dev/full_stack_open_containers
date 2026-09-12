@@ -8,6 +8,8 @@ ENV VITE_BACKEND_URL=http://localhost:3000
 
 RUN npm ci
 
+RUN npm test
+
 RUN npm run build
 
 FROM nginx:1.29-alpine
