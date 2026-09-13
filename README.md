@@ -4,6 +4,9 @@ This repository contains my solutions for **Part 12** of the Full Stack Open cou
 
 ### 🛠️ Projects & Exercises:
 
+- **[answers](./answers)**
+  _Terminal session transcripts for the exercises that required copy-pasting shell commands and their output (Docker CLI basics, Ubuntu container exploration, and Mongo/Redis CLI access), rather than code changes._
+
 - **[todo-app](./todo-app)**
   _The course-provided todo application, containerized for both development (hot-reload via bind mounts, Nginx reverse proxy) and production (multi-stage builds, GitHub Actions CI running Playwright end-to-end tests)._
 
