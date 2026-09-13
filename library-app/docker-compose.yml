@@ -1,0 +1,27 @@
+services:
+  frontend:
+    image: library-front
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+
+  backend:
+    image: library-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - ./backend/.env
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+
+  nginx:
+    image: nginx:1.29
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 8080:80
+    depends_on:
+      - frontend
+      - backend
